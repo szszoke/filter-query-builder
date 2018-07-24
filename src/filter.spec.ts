@@ -1,9 +1,14 @@
 import filter from "./filter";
 import { expect } from "chai";
 
+interface INestedObject {
+    bar: string;
+}
+
 interface ITestObject {
     stringField: string;
     numberField: number;
+    foo: INestedObject;
 }
 
 describe("filter", () => {
@@ -38,7 +43,7 @@ describe("filter", () => {
             .field("numberField")
             .lessThan(1)
             .query();
-        
+
         expect(query).to.deep.equal([{
             field: "numberField",
             predicate: "less-than",
@@ -51,7 +56,7 @@ describe("filter", () => {
             .field("numberField")
             .lessThanOrEqual(1)
             .query();
-        
+
         expect(query).to.deep.equal([{
             field: "numberField",
             predicate: "less-than-or-equal",
@@ -64,7 +69,7 @@ describe("filter", () => {
             .field("numberField")
             .greaterThan(1)
             .query();
-        
+
         expect(query).to.deep.equal([{
             field: "numberField",
             predicate: "greater-than",
@@ -77,7 +82,7 @@ describe("filter", () => {
             .field("numberField")
             .greaterThanOrEqual(1)
             .query();
-        
+
         expect(query).to.deep.equal([{
             field: "numberField",
             predicate: "greater-than-or-equal",
@@ -90,7 +95,7 @@ describe("filter", () => {
             .field("stringField")
             .startsWith("hello world")
             .query();
-        
+
         expect(query).to.deep.equal([{
             field: "stringField",
             predicate: "starts-with",
@@ -103,11 +108,25 @@ describe("filter", () => {
             .field("stringField")
             .endsWith("hello world")
             .query();
-        
+
         expect(query).to.deep.equal([{
             field: "stringField",
             predicate: "ends-with",
             value: "hello world"
+        }]);
+    });
+
+    it("nested contains query", () => {
+        const query = filter<ITestObject>()
+            .field("foo")
+            .then("bar")
+            .contains("test")
+            .query();
+        
+        expect(query).to.deep.equal([{
+            field: "foo.bar",
+            predicate: "contains",
+            value: "test"
         }]);
     });
 });
