@@ -1,11 +1,19 @@
 {
-  "name": "query-builder",
+  "name": "filter-query-builder",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/filter.js",
+  "types": "dist/filter.d.ts",
   "author": {
     "name": "Szabolcs Szőke",
     "email": "szszoke.code@gmail.com",
     "url": "https://github.com/szszoke"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/szszoke/filter-query-builder.git"
+  },
+  "bugs": {
+    "url": "https://github.com/szszoke/filter-query-builder/issues"
   },
   "license": "MIT",
   "scripts": {
