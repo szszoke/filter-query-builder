@@ -1,4 +1,4 @@
-export declare type Predicate = "contains" | "equals" | "less-than" | "less-than-or-equal" | "greater-than" | "greater-than-or-equal" | "starts-with" | "ends-with";
+export declare type Predicate = "contains" | "equal" | "doesNotEqual" | "lessThan" | "lessThanOrEqual" | "greaterThan" | "greaterThanOrEqual" | "startsWith" | "endsWith";
 export interface FilterCondition {
     field: string;
     predicate: Predicate;
@@ -17,7 +17,8 @@ declare class FieldFilter<TParentObject, TProperty> {
     predicate: (value: TProperty, predicate: Predicate) => Filter<TParentObject>;
     then: <TNestedField extends keyof TProperty>(field: TNestedField) => FieldFilter<TParentObject, TProperty[TNestedField]>;
     contains: (value: TProperty) => Filter<TParentObject>;
-    equals: (value: TProperty) => Filter<TParentObject>;
+    equal: (value: TProperty) => Filter<TParentObject>;
+    doesNotEqual: (value: TProperty) => Filter<TParentObject>;
     lessThan: (value: TProperty) => Filter<TParentObject>;
     lessThanOrEqual: (value: TProperty) => Filter<TParentObject>;
     greaterThan: (value: TProperty) => Filter<TParentObject>;

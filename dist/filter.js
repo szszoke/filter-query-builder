@@ -31,26 +31,29 @@ var FieldFilter = /** @class */ (function () {
         this.contains = function (value) {
             return _this.predicate(value, "contains");
         };
-        this.equals = function (value) {
-            return _this.predicate(value, "equals");
+        this.equal = function (value) {
+            return _this.predicate(value, "equal");
+        };
+        this.doesNotEqual = function (value) {
+            return _this.predicate(value, "doesNotEqual");
         };
         this.lessThan = function (value) {
-            return _this.predicate(value, "less-than");
+            return _this.predicate(value, "lessThan");
         };
         this.lessThanOrEqual = function (value) {
-            return _this.predicate(value, "less-than-or-equal");
+            return _this.predicate(value, "lessThanOrEqual");
         };
         this.greaterThan = function (value) {
-            return _this.predicate(value, "greater-than");
+            return _this.predicate(value, "greaterThan");
         };
         this.greaterThanOrEqual = function (value) {
-            return _this.predicate(value, "greater-than-or-equal");
+            return _this.predicate(value, "greaterThanOrEqual");
         };
         this.startsWith = function (value) {
-            return _this.predicate(value, "starts-with");
+            return _this.predicate(value, "startsWith");
         };
         this.endsWith = function (value) {
-            return _this.predicate(value, "ends-with");
+            return _this.predicate(value, "endsWith");
         };
         this.parent = parent;
         this.field = field;
