@@ -1,6 +1,6 @@
 {
   "name": "filter-query-builder",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/filter.js",
   "types": "dist/filter.d.ts",
   "author": {
