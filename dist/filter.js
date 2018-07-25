@@ -4,13 +4,13 @@ var Filter = /** @class */ (function () {
     function Filter() {
         var _this = this;
         this.conditions = [];
-        this.field = function (field) {
-            return new FieldFilter(_this, field);
+        this.field = function (fieldName) {
+            return new FieldFilter(_this, fieldName);
         };
         this.query = function () { return _this.conditions; };
-        this.predicate = function (field, value, predicate) {
+        this.predicate = function (fieldName, value, predicate) {
             _this.conditions.push({
-                field: field,
+                fieldName: fieldName,
                 predicate: predicate,
                 value: value,
             });
@@ -20,13 +20,13 @@ var Filter = /** @class */ (function () {
     return Filter;
 }());
 var FieldFilter = /** @class */ (function () {
-    function FieldFilter(parent, field) {
+    function FieldFilter(parent, fieldName) {
         var _this = this;
         this.predicate = function (value, predicate) {
-            return _this.parent.predicate(_this.field, value, predicate);
+            return _this.parent.predicate(_this.fieldName, value, predicate);
         };
-        this.then = function (field) {
-            return new FieldFilter(_this.parent, _this.field + "." + field);
+        this.then = function (fieldName) {
+            return new FieldFilter(_this.parent, _this.fieldName + "." + fieldName);
         };
         this.contains = function (value) {
             return _this.predicate(value, "contains");
@@ -56,7 +56,7 @@ var FieldFilter = /** @class */ (function () {
             return _this.predicate(value, "endsWith");
         };
         this.parent = parent;
-        this.field = field;
+        this.fieldName = fieldName;
     }
     return FieldFilter;
 }());

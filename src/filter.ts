@@ -10,7 +10,7 @@ export type Predicate =
     | "endsWith";
 
 export interface FilterCondition {
-    field: string;
+    fieldName: string;
     predicate: Predicate;
     value: any;
 }
@@ -18,14 +18,14 @@ export interface FilterCondition {
 class Filter<TObject> {
     private readonly conditions: Array<FilterCondition> = [];
 
-    field = <TProperty extends keyof TObject>(field: TProperty): FieldFilter<TObject, TObject[TProperty]> =>
-        new FieldFilter<TObject, TObject[TProperty]>(this, field as string);
+    field = <TProperty extends keyof TObject>(fieldName: TProperty): FieldFilter<TObject, TObject[TProperty]> =>
+        new FieldFilter<TObject, TObject[TProperty]>(this, fieldName as string);
 
     query = (): Array<FilterCondition> => this.conditions;
 
-    predicate = (field: string, value: any, predicate: Predicate): Filter<TObject> => {
+    predicate = (fieldName: string, value: any, predicate: Predicate): Filter<TObject> => {
         this.conditions.push({
-            field,
+            fieldName,
             predicate,
             value,
         });
@@ -36,23 +36,23 @@ class Filter<TObject> {
 
 class FieldFilter<TParentObject, TProperty> {
     private readonly parent: Filter<TParentObject>;
-    private readonly field: string;
+    private readonly fieldName: string;
 
-    constructor(parent: Filter<TParentObject>, field: string) {
+    constructor(parent: Filter<TParentObject>, fieldName: string) {
         this.parent = parent;
-        this.field = field;
+        this.fieldName = fieldName;
     }
 
     predicate = (value: TProperty, predicate: Predicate): Filter<TParentObject> => {
         return this.parent.predicate(
-            this.field,
+            this.fieldName,
             value,
             predicate,
         );
     }
 
-    then = <TNestedField extends keyof TProperty>(field: TNestedField): FieldFilter<TParentObject, TProperty[TNestedField]> =>
-        new FieldFilter<TParentObject, TProperty[TNestedField]>(this.parent, `${this.field}.${field as string}`);
+    then = <TNestedField extends keyof TProperty>(fieldName: TNestedField): FieldFilter<TParentObject, TProperty[TNestedField]> =>
+        new FieldFilter<TParentObject, TProperty[TNestedField]>(this.parent, `${this.fieldName}.${fieldName as string}`);
 
     contains = (value: TProperty): Filter<TParentObject> =>
         this.predicate(value, "contains");

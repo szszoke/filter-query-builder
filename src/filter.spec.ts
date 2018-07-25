@@ -19,7 +19,7 @@ describe("filter", () => {
             .query();
 
         expect(query).to.deep.equal([{
-            field: "stringField",
+            fieldName: "stringField",
             predicate: "contains",
             value: "hello world",
         }]);
@@ -32,7 +32,7 @@ describe("filter", () => {
             .query();
 
         expect(query).to.deep.equal([{
-            field: "stringField",
+            fieldName: "stringField",
             predicate: "equal",
             value: "hello world",
         }]);
@@ -45,7 +45,7 @@ describe("filter", () => {
             .query();
 
         expect(query).to.deep.equal([{
-            field: "stringField",
+            fieldName: "stringField",
             predicate: "doesNotEqual",
             value: "hello world",
         }]);
@@ -58,7 +58,7 @@ describe("filter", () => {
             .query();
 
         expect(query).to.deep.equal([{
-            field: "numberField",
+            fieldName: "numberField",
             predicate: "lessThan",
             value: 1,
         }]);
@@ -71,7 +71,7 @@ describe("filter", () => {
             .query();
 
         expect(query).to.deep.equal([{
-            field: "numberField",
+            fieldName: "numberField",
             predicate: "lessThanOrEqual",
             value: 1,
         }]);
@@ -84,7 +84,7 @@ describe("filter", () => {
             .query();
 
         expect(query).to.deep.equal([{
-            field: "numberField",
+            fieldName: "numberField",
             predicate: "greaterThan",
             value: 1,
         }]);
@@ -97,7 +97,7 @@ describe("filter", () => {
             .query();
 
         expect(query).to.deep.equal([{
-            field: "numberField",
+            fieldName: "numberField",
             predicate: "greaterThanOrEqual",
             value: 1,
         }]);
@@ -110,7 +110,7 @@ describe("filter", () => {
             .query();
 
         expect(query).to.deep.equal([{
-            field: "stringField",
+            fieldName: "stringField",
             predicate: "startsWith",
             value: "hello world"
         }]);
@@ -123,7 +123,7 @@ describe("filter", () => {
             .query();
 
         expect(query).to.deep.equal([{
-            field: "stringField",
+            fieldName: "stringField",
             predicate: "endsWith",
             value: "hello world"
         }]);
@@ -137,7 +137,7 @@ describe("filter", () => {
             .query();
         
         expect(query).to.deep.equal([{
-            field: "foo.bar",
+            fieldName: "foo.bar",
             predicate: "contains",
             value: "test"
         }]);

@@ -1,21 +1,21 @@
 export declare type Predicate = "contains" | "equal" | "doesNotEqual" | "lessThan" | "lessThanOrEqual" | "greaterThan" | "greaterThanOrEqual" | "startsWith" | "endsWith";
 export interface FilterCondition {
-    field: string;
+    fieldName: string;
     predicate: Predicate;
     value: any;
 }
 declare class Filter<TObject> {
     private readonly conditions;
-    field: <TProperty extends keyof TObject>(field: TProperty) => FieldFilter<TObject, TObject[TProperty]>;
+    field: <TProperty extends keyof TObject>(fieldName: TProperty) => FieldFilter<TObject, TObject[TProperty]>;
     query: () => FilterCondition[];
-    predicate: (field: string, value: any, predicate: Predicate) => Filter<TObject>;
+    predicate: (fieldName: string, value: any, predicate: Predicate) => Filter<TObject>;
 }
 declare class FieldFilter<TParentObject, TProperty> {
     private readonly parent;
-    private readonly field;
-    constructor(parent: Filter<TParentObject>, field: string);
+    private readonly fieldName;
+    constructor(parent: Filter<TParentObject>, fieldName: string);
     predicate: (value: TProperty, predicate: Predicate) => Filter<TParentObject>;
-    then: <TNestedField extends keyof TProperty>(field: TNestedField) => FieldFilter<TParentObject, TProperty[TNestedField]>;
+    then: <TNestedField extends keyof TProperty>(fieldName: TNestedField) => FieldFilter<TParentObject, TProperty[TNestedField]>;
     contains: (value: TProperty) => Filter<TParentObject>;
     equal: (value: TProperty) => Filter<TParentObject>;
     doesNotEqual: (value: TProperty) => Filter<TParentObject>;
