@@ -1,28 +1,29 @@
 export declare type Predicate = "contains" | "equals" | "less-than" | "less-than-or-equal" | "greater-than" | "greater-than-or-equal" | "starts-with" | "ends-with";
-export interface FilterCondition<T> {
-    field: keyof T;
+export interface FilterCondition {
+    field: string;
     predicate: Predicate;
     value: any;
 }
-declare class Filter<T> {
+declare class Filter<TObject> {
     private readonly conditions;
-    field: <K extends keyof T>(field: K) => FieldFilter<T, T[K]>;
-    query: () => FilterCondition<T>[];
-    predicate: <K extends keyof T>(field: K, value: any, predicate: Predicate) => Filter<T>;
+    field: <TProperty extends keyof TObject>(field: TProperty) => FieldFilter<TObject, TObject[TProperty]>;
+    query: () => FilterCondition[];
+    predicate: (field: string, value: any, predicate: Predicate) => Filter<TObject>;
 }
-declare class FieldFilter<T, K> {
+declare class FieldFilter<TParentObject, TProperty> {
     private readonly parent;
     private readonly field;
-    constructor(parent: Filter<T>, field: keyof T);
-    predicate: (value: K, predicate: Predicate) => Filter<T>;
-    contains: (value: K) => Filter<T>;
-    equals: (value: K) => Filter<T>;
-    lessThan: (value: K) => Filter<T>;
-    lessThanOrEqual: (value: K) => Filter<T>;
-    greaterThan: (value: K) => Filter<T>;
-    greaterThanOrEqual: (value: K) => Filter<T>;
-    startsWith: (value: K) => Filter<T>;
-    endsWith: (value: K) => Filter<T>;
+    constructor(parent: Filter<TParentObject>, field: string);
+    predicate: (value: TProperty, predicate: Predicate) => Filter<TParentObject>;
+    then: <TNestedField extends keyof TProperty>(field: TNestedField) => FieldFilter<TParentObject, TProperty[TNestedField]>;
+    contains: (value: TProperty) => Filter<TParentObject>;
+    equals: (value: TProperty) => Filter<TParentObject>;
+    lessThan: (value: TProperty) => Filter<TParentObject>;
+    lessThanOrEqual: (value: TProperty) => Filter<TParentObject>;
+    greaterThan: (value: TProperty) => Filter<TParentObject>;
+    greaterThanOrEqual: (value: TProperty) => Filter<TParentObject>;
+    startsWith: (value: TProperty) => Filter<TParentObject>;
+    endsWith: (value: TProperty) => Filter<TParentObject>;
 }
 declare const _default: <T>() => Filter<T>;
 export default _default;

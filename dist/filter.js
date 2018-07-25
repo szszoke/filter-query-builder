@@ -25,6 +25,9 @@ var FieldFilter = /** @class */ (function () {
         this.predicate = function (value, predicate) {
             return _this.parent.predicate(_this.field, value, predicate);
         };
+        this.then = function (field) {
+            return new FieldFilter(_this.parent, _this.field + "." + field);
+        };
         this.contains = function (value) {
             return _this.predicate(value, "contains");
         };
