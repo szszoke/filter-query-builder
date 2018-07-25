@@ -7,12 +7,14 @@ export type Predicate =
     | "greaterThan"
     | "greaterThanOrEqual"
     | "startsWith"
-    | "endsWith";
+    | "endsWith"
+    | "oneOf";
 
 export interface FilterCondition {
     fieldName: string;
     predicate: Predicate;
-    value: any;
+    value?: any;
+    values?: any[];
 }
 
 class Filter<TObject> {
@@ -23,11 +25,17 @@ class Filter<TObject> {
 
     query = (): Array<FilterCondition> => this.conditions;
 
-    predicate = (fieldName: string, value: any, predicate: Predicate): Filter<TObject> => {
+    predicate = (
+        fieldName: string,
+        predicate: Predicate,
+        value?: any,
+        values?: any[],
+    ): Filter<TObject> => {
         this.conditions.push({
             fieldName,
             predicate,
             value,
+            values,
         });
 
         return this;
@@ -43,11 +51,16 @@ class FieldFilter<TParentObject, TProperty> {
         this.fieldName = fieldName;
     }
 
-    predicate = (value: TProperty, predicate: Predicate): Filter<TParentObject> => {
+    predicate = (
+        predicate: Predicate,
+        value?: TProperty,
+        values?: Array<TProperty>,
+    ): Filter<TParentObject> => {
         return this.parent.predicate(
             this.fieldName,
-            value,
             predicate,
+            value,
+            values,
         );
     }
 
@@ -55,31 +68,34 @@ class FieldFilter<TParentObject, TProperty> {
         new FieldFilter<TParentObject, TProperty[TNestedField]>(this.parent, `${this.fieldName}.${fieldName as string}`);
 
     contains = (value: TProperty): Filter<TParentObject> =>
-        this.predicate(value, "contains");
+        this.predicate("contains", value);
 
     equal = (value: TProperty): Filter<TParentObject> =>
-        this.predicate(value, "equal");
+        this.predicate("equal", value);
     
     doesNotEqual = (value: TProperty): Filter<TParentObject> =>
-        this.predicate(value, "doesNotEqual");
+        this.predicate("doesNotEqual", value);
 
     lessThan = (value: TProperty): Filter<TParentObject> =>
-        this.predicate(value, "lessThan");
+        this.predicate("lessThan", value);
 
     lessThanOrEqual = (value: TProperty): Filter<TParentObject> =>
-        this.predicate(value, "lessThanOrEqual");
+        this.predicate("lessThanOrEqual", value);
 
     greaterThan = (value: TProperty): Filter<TParentObject> =>
-        this.predicate(value, "greaterThan");
+        this.predicate("greaterThan", value);
 
     greaterThanOrEqual = (value: TProperty): Filter<TParentObject> =>
-        this.predicate(value, "greaterThanOrEqual");
+        this.predicate("greaterThanOrEqual", value);
 
     startsWith = (value: TProperty): Filter<TParentObject> =>
-        this.predicate(value, "startsWith");
+        this.predicate("startsWith", value);
 
     endsWith = (value: TProperty): Filter<TParentObject> =>
-        this.predicate(value, "endsWith");
+        this.predicate("endsWith", value);
+    
+    oneOf = (values: TProperty[]): Filter<TParentObject> =>
+        this.predicate("oneOf", undefined, values);
 }
 
 export default <T>() => new Filter<T>();

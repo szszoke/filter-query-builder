@@ -22,6 +22,7 @@ describe("filter", () => {
             fieldName: "stringField",
             predicate: "contains",
             value: "hello world",
+            values: undefined,
         }]);
     });
 
@@ -35,6 +36,7 @@ describe("filter", () => {
             fieldName: "stringField",
             predicate: "equal",
             value: "hello world",
+            values: undefined,
         }]);
     });
 
@@ -48,6 +50,7 @@ describe("filter", () => {
             fieldName: "stringField",
             predicate: "doesNotEqual",
             value: "hello world",
+            values: undefined,
         }]);
     });
 
@@ -61,6 +64,7 @@ describe("filter", () => {
             fieldName: "numberField",
             predicate: "lessThan",
             value: 1,
+            values: undefined,
         }]);
     });
 
@@ -74,6 +78,7 @@ describe("filter", () => {
             fieldName: "numberField",
             predicate: "lessThanOrEqual",
             value: 1,
+            values: undefined,
         }]);
     });
 
@@ -87,6 +92,7 @@ describe("filter", () => {
             fieldName: "numberField",
             predicate: "greaterThan",
             value: 1,
+            values: undefined,
         }]);
     });
 
@@ -100,6 +106,7 @@ describe("filter", () => {
             fieldName: "numberField",
             predicate: "greaterThanOrEqual",
             value: 1,
+            values: undefined,
         }]);
     });
 
@@ -112,7 +119,8 @@ describe("filter", () => {
         expect(query).to.deep.equal([{
             fieldName: "stringField",
             predicate: "startsWith",
-            value: "hello world"
+            value: "hello world",
+            values: undefined,
         }]);
     });
 
@@ -125,7 +133,37 @@ describe("filter", () => {
         expect(query).to.deep.equal([{
             fieldName: "stringField",
             predicate: "endsWith",
-            value: "hello world"
+            value: "hello world",
+            values: undefined,
+        }]);
+    });
+
+    it("oneOf query", () => {
+        const query = filter<ITestObject>()
+            .field("numberField")
+            .oneOf([1, 2])
+            .query();
+        
+        expect(query).to.deep.equal([{
+            fieldName: "numberField",
+            predicate: "oneOf",
+            value: undefined,
+            values: [1, 2],
+        }]);
+    });
+
+    it("nested oneOf query", () => {
+        const query = filter<ITestObject>()
+            .field("foo")
+            .then("bar")
+            .oneOf(["hello", "world"])
+            .query();
+        
+        expect(query).to.deep.equal([{
+            fieldName: "foo.bar",
+            predicate: "oneOf",
+            value: undefined,
+            values: ["hello", "world"],
         }]);
     });
 
@@ -139,7 +177,8 @@ describe("filter", () => {
         expect(query).to.deep.equal([{
             fieldName: "foo.bar",
             predicate: "contains",
-            value: "test"
+            value: "test",
+            values: undefined,
         }]);
     });
 });
