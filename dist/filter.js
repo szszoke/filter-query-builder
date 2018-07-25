@@ -8,11 +8,12 @@ var Filter = /** @class */ (function () {
             return new FieldFilter(_this, fieldName);
         };
         this.query = function () { return _this.conditions; };
-        this.predicate = function (fieldName, value, predicate) {
+        this.predicate = function (fieldName, predicate, value, values) {
             _this.conditions.push({
                 fieldName: fieldName,
                 predicate: predicate,
                 value: value,
+                values: values,
             });
             return _this;
         };
@@ -22,38 +23,41 @@ var Filter = /** @class */ (function () {
 var FieldFilter = /** @class */ (function () {
     function FieldFilter(parent, fieldName) {
         var _this = this;
-        this.predicate = function (value, predicate) {
-            return _this.parent.predicate(_this.fieldName, value, predicate);
+        this.predicate = function (predicate, value, values) {
+            return _this.parent.predicate(_this.fieldName, predicate, value, values);
         };
         this.then = function (fieldName) {
             return new FieldFilter(_this.parent, _this.fieldName + "." + fieldName);
         };
         this.contains = function (value) {
-            return _this.predicate(value, "contains");
+            return _this.predicate("contains", value);
         };
         this.equal = function (value) {
-            return _this.predicate(value, "equal");
+            return _this.predicate("equal", value);
         };
         this.doesNotEqual = function (value) {
-            return _this.predicate(value, "doesNotEqual");
+            return _this.predicate("doesNotEqual", value);
         };
         this.lessThan = function (value) {
-            return _this.predicate(value, "lessThan");
+            return _this.predicate("lessThan", value);
         };
         this.lessThanOrEqual = function (value) {
-            return _this.predicate(value, "lessThanOrEqual");
+            return _this.predicate("lessThanOrEqual", value);
         };
         this.greaterThan = function (value) {
-            return _this.predicate(value, "greaterThan");
+            return _this.predicate("greaterThan", value);
         };
         this.greaterThanOrEqual = function (value) {
-            return _this.predicate(value, "greaterThanOrEqual");
+            return _this.predicate("greaterThanOrEqual", value);
         };
         this.startsWith = function (value) {
-            return _this.predicate(value, "startsWith");
+            return _this.predicate("startsWith", value);
         };
         this.endsWith = function (value) {
-            return _this.predicate(value, "endsWith");
+            return _this.predicate("endsWith", value);
+        };
+        this.oneOf = function (values) {
+            return _this.predicate("oneOf", undefined, values);
         };
         this.parent = parent;
         this.fieldName = fieldName;
