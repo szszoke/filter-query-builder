@@ -3,33 +3,35 @@ import { IFilterCondition } from "./filter-condition";
 
 type InferPromiseType<T> = T extends Promise<infer U> ? U : T;
 
-export type PromiseCreator<P extends Promise<T>, T = InferPromiseType<P>> = (
-  filterConditions: IFilterCondition[],
-) => P;
+export type PromiseCreator<
+  TPromise extends Promise<TPromiseType>,
+  TPromiseType
+> = (filterConditions: IFilterCondition[]) => TPromise;
 
 export class PromisifiedFilter<
-  TPromise extends Promise<TObject>,
-  TObject = InferPromiseType<TPromise>
-> extends Filter<TObject> {
-  private readonly promiseCreator: PromiseCreator<TPromise, TObject>;
+  TParentObject,
+  TPromise extends Promise<TPromiseType>,
+  TPromiseType = InferPromiseType<TPromise>
+> extends Filter<TParentObject> {
+  private readonly promiseCreator: PromiseCreator<TPromise, TPromiseType>;
 
-  constructor(promiseCreator: PromiseCreator<TPromise, TObject>) {
+  constructor(promiseCreator: PromiseCreator<TPromise, TPromiseType>) {
     super();
 
     this.promiseCreator = promiseCreator;
   }
 
-  field<TProperty extends keyof TObject>(
+  field<TProperty extends keyof TParentObject>(
     fieldName: TProperty,
   ): FieldFilter<
-    TObject,
-    TObject[TProperty],
-    PromisifiedFilter<TPromise, TObject>
+    TParentObject,
+    TParentObject[TProperty],
+    PromisifiedFilter<TParentObject, TPromise, TPromiseType>
   > {
     return new FieldFilter<
-      TObject,
-      TObject[TProperty],
-      PromisifiedFilter<TPromise, TObject>
+      TParentObject,
+      TParentObject[TProperty],
+      PromisifiedFilter<TParentObject, TPromise, TPromiseType>
     >(this, fieldName as string);
   }
 
@@ -39,8 +41,10 @@ export class PromisifiedFilter<
 }
 
 export const createFilterPromise = <
-  P extends Promise<T>,
-  T = InferPromiseType<P>
+  TParentObject,
+  TPromise extends Promise<TPromiseType>,
+  TPromiseType = InferPromiseType<TPromise>
 >(
-  promiseCreator: PromiseCreator<P, T>,
-) => new PromisifiedFilter<P, T>(promiseCreator);
+  promiseCreator: PromiseCreator<TPromise, TPromiseType>,
+) =>
+  new PromisifiedFilter<TParentObject, TPromise, TPromiseType>(promiseCreator);

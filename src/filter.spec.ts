@@ -1,4 +1,4 @@
-import filter from "./filter";
+import filter from ".";
 import { expect } from "chai";
 
 interface INestedObject {

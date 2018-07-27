@@ -2,66 +2,68 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Filter = /** @class */ (function () {
     function Filter() {
-        var _this = this;
         this.conditions = [];
-        this.field = function (fieldName) {
-            return new FieldFilter(_this, fieldName);
-        };
-        this.query = function () { return _this.conditions; };
-        this.predicate = function (fieldName, predicate, value, values) {
-            _this.conditions.push({
-                fieldName: fieldName,
-                predicate: predicate,
-                value: value,
-                values: values,
-            });
-            return _this;
-        };
     }
+    Filter.prototype.field = function (fieldName) {
+        return new FieldFilter(this, fieldName);
+    };
+    Filter.prototype.query = function () {
+        return this.conditions;
+    };
+    Filter.prototype.predicate = function (fieldName, predicate, value, values) {
+        this.conditions.push({
+            fieldName: fieldName,
+            predicate: predicate,
+            value: value,
+            values: values,
+        });
+        return this;
+    };
     return Filter;
 }());
+exports.Filter = Filter;
 var FieldFilter = /** @class */ (function () {
     function FieldFilter(parent, fieldName) {
-        var _this = this;
-        this.predicate = function (predicate, value, values) {
-            return _this.parent.predicate(_this.fieldName, predicate, value, values);
-        };
-        this.then = function (fieldName) {
-            return new FieldFilter(_this.parent, _this.fieldName + "." + fieldName);
-        };
-        this.contains = function (value) {
-            return _this.predicate("contains", value);
-        };
-        this.equal = function (value) {
-            return _this.predicate("equal", value);
-        };
-        this.doesNotEqual = function (value) {
-            return _this.predicate("doesNotEqual", value);
-        };
-        this.lessThan = function (value) {
-            return _this.predicate("lessThan", value);
-        };
-        this.lessThanOrEqual = function (value) {
-            return _this.predicate("lessThanOrEqual", value);
-        };
-        this.greaterThan = function (value) {
-            return _this.predicate("greaterThan", value);
-        };
-        this.greaterThanOrEqual = function (value) {
-            return _this.predicate("greaterThanOrEqual", value);
-        };
-        this.startsWith = function (value) {
-            return _this.predicate("startsWith", value);
-        };
-        this.endsWith = function (value) {
-            return _this.predicate("endsWith", value);
-        };
-        this.oneOf = function (values) {
-            return _this.predicate("oneOf", undefined, values);
-        };
         this.parent = parent;
         this.fieldName = fieldName;
     }
+    FieldFilter.prototype.predicate = function (predicate, value, values) {
+        return this.parent.predicate(this.fieldName, predicate, value, values);
+    };
+    FieldFilter.prototype.then = function (fieldName) {
+        return new FieldFilter(this.parent, this.fieldName + "." + fieldName);
+    };
+    FieldFilter.prototype.contains = function (value) {
+        return this.predicate("contains", value);
+    };
+    FieldFilter.prototype.equal = function (value) {
+        return this.predicate("equal", value);
+    };
+    FieldFilter.prototype.doesNotEqual = function (value) {
+        return this.predicate("doesNotEqual", value);
+    };
+    FieldFilter.prototype.lessThan = function (value) {
+        return this.predicate("lessThan", value);
+    };
+    FieldFilter.prototype.lessThanOrEqual = function (value) {
+        return this.predicate("lessThanOrEqual", value);
+    };
+    FieldFilter.prototype.greaterThan = function (value) {
+        return this.predicate("greaterThan", value);
+    };
+    FieldFilter.prototype.greaterThanOrEqual = function (value) {
+        return this.predicate("greaterThanOrEqual", value);
+    };
+    FieldFilter.prototype.startsWith = function (value) {
+        return this.predicate("startsWith", value);
+    };
+    FieldFilter.prototype.endsWith = function (value) {
+        return this.predicate("endsWith", value);
+    };
+    FieldFilter.prototype.oneOf = function (values) {
+        return this.predicate("oneOf", undefined, values);
+    };
     return FieldFilter;
 }());
+exports.FieldFilter = FieldFilter;
 exports.default = (function () { return new Filter(); });

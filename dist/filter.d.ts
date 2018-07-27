@@ -1,32 +1,27 @@
-export declare type Predicate = "contains" | "equal" | "doesNotEqual" | "lessThan" | "lessThanOrEqual" | "greaterThan" | "greaterThanOrEqual" | "startsWith" | "endsWith" | "oneOf";
-export interface FilterCondition {
-    fieldName: string;
-    predicate: Predicate;
-    value?: any;
-    values?: any[];
-}
-declare class Filter<TObject> {
+import { Predicate } from "./predicate";
+import { IFilterCondition } from "./filter-condition";
+export declare class Filter<TObject> {
     private readonly conditions;
-    field: <TProperty extends keyof TObject>(fieldName: TProperty) => FieldFilter<TObject, TObject[TProperty]>;
-    query: () => FilterCondition[];
-    predicate: (fieldName: string, predicate: Predicate, value?: any, values?: any[] | undefined) => Filter<TObject>;
+    field<TProperty extends keyof TObject>(fieldName: TProperty): FieldFilter<TObject, TObject[TProperty], Filter<TObject>>;
+    query(): IFilterCondition[];
+    predicate(fieldName: string, predicate: Predicate, value?: any, values?: any[]): Filter<TObject>;
 }
-declare class FieldFilter<TParentObject, TProperty> {
+export declare class FieldFilter<TParentObject, TProperty, TFilter extends Filter<TParentObject>> {
     private readonly parent;
     private readonly fieldName;
-    constructor(parent: Filter<TParentObject>, fieldName: string);
-    predicate: (predicate: Predicate, value?: TProperty | undefined, values?: TProperty[] | undefined) => Filter<TParentObject>;
-    then: <TNestedField extends keyof TProperty>(fieldName: TNestedField) => FieldFilter<TParentObject, TProperty[TNestedField]>;
-    contains: (value: TProperty) => Filter<TParentObject>;
-    equal: (value: TProperty) => Filter<TParentObject>;
-    doesNotEqual: (value: TProperty) => Filter<TParentObject>;
-    lessThan: (value: TProperty) => Filter<TParentObject>;
-    lessThanOrEqual: (value: TProperty) => Filter<TParentObject>;
-    greaterThan: (value: TProperty) => Filter<TParentObject>;
-    greaterThanOrEqual: (value: TProperty) => Filter<TParentObject>;
-    startsWith: (value: TProperty) => Filter<TParentObject>;
-    endsWith: (value: TProperty) => Filter<TParentObject>;
-    oneOf: (values: TProperty[]) => Filter<TParentObject>;
+    constructor(parent: TFilter, fieldName: string);
+    predicate(predicate: Predicate, value?: TProperty, values?: TProperty[]): TFilter;
+    then<TNestedField extends keyof TProperty>(fieldName: TNestedField): FieldFilter<TParentObject, TProperty[TNestedField], TFilter>;
+    contains(value: TProperty): TFilter;
+    equal(value: TProperty): TFilter;
+    doesNotEqual(value: TProperty): TFilter;
+    lessThan(value: TProperty): TFilter;
+    lessThanOrEqual(value: TProperty): TFilter;
+    greaterThan(value: TProperty): TFilter;
+    greaterThanOrEqual(value: TProperty): TFilter;
+    startsWith(value: TProperty): TFilter;
+    endsWith(value: TProperty): TFilter;
+    oneOf(values: TProperty[]): TFilter;
 }
 declare const _default: <T>() => Filter<T>;
 export default _default;
